@@ -1,0 +1,7 @@
+REST API 
+ - supports json response
+ - get/users - list all users 
+ - get/user/1 - get the user with id = 1
+ - post / users - create new user
+ - patch /user/id - edit the user with given id
+ - delete / user / id - delete the user with given id 
