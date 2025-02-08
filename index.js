@@ -6,6 +6,13 @@ const app = express();
 PORT = 8000;
 
 app.use(express.urlencoded({extended : false}));
+app.use((req,res,next) =>{
+/*   return res.json("middleware response");
+ */
+next();
+
+}); 
+
 app.get("/api/users", (req,res) =>{
   return res.send(users);
 });
@@ -13,7 +20,7 @@ app.route("/api/users/:userId").get ((req,res) =>{
   const id = Number(req.params.userId);
   const user = users.find((user) => user.id === id);
   return res.json(user);
-})
+})  
 .patch((req,res) => {
   const id = Number(req.params.userId);
   const user = users.find((user) => user.id === id);
