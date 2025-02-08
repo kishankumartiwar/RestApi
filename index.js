@@ -1,9 +1,26 @@
 const express = require("express");
 const fs = require("fs");
-const users = require("./MOCK_DATA.json");
+const mongoose = require("mongoose");
+const userRouter = require('./routes/user.route.js');
 const app = express();
 
+
 PORT = 8000;
+
+// MongoDB URI
+const uri = "mongodb+srv://KishanKumar:Hellgate297@cluster0.cksrd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
+// Connect to MongoDB
+mongoose
+  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log("Connected to MongoDB successfully!");
+  })
+  .catch((err) => {
+    console.error("Error connecting to MongoDB:", err.message);
+  });
+
+
 
 app.use(express.urlencoded({extended : false}));
 app.use((req,res,next) =>{
@@ -13,39 +30,8 @@ next();
 
 }); 
 
-app.get("/api/users", (req,res) =>{
-  return res.send(users);
-});
-app.route("/api/users/:userId").get ((req,res) =>{
-  const id = Number(req.params.userId);
-  const user = users.find((user) => user.id === id);
-  return res.json(user);
-})  
-.patch((req,res) => {
-  const id = Number(req.params.userId);
-  const user = users.find((user) => user.id === id);
-  const {first_name,last_name} = req.body; 
-  user.first_name = first_name; 
-  user.last_name = last_name;
-  console.log(user);
- /*  fs.writeFileSync({}); */
+app.use("/user", userRouter);
 
-  return res.json({status: "pending"});
-})
- .delete ((req,res) => {
-  return res.json({status: "pending"});
-});
-app.post("/api/users", (req,res) => {
-  const body = req.body;
-  users.push({...body , id: users.length+1});
-  fs.writeFileSync('./MOCK_DATA.json',JSON.stringify(users));
-  console.log(body);
-  return res.json({status:"success" , id: users.length });
-});
-
-app.get("/users" , (req,res)=>{
-  res.send("this is homepage");
-})
 app.listen(PORT , ()=>{
   console.log("server running on port 8000");
 })
